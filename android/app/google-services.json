@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "412048366856",
+    "firebase_url": "https://caupo-74bf0.firebaseio.com",
+    "project_id": "caupo-74bf0",
+    "storage_bucket": "caupo-74bf0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412048366856:android:e9fd8154721e4e51dba0bd",
+        "android_client_info": {
+          "package_name": "com.gamingfella.caupo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "412048366856-h7kgcdav2hqfmcafhbo46ej9g92okt9o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiE6MOAWLwHkpc4AGulCNDfal7xRbS_B0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "412048366856-h7kgcdav2hqfmcafhbo46ej9g92okt9o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+}
+],
+"configuration_version": "1"
+}
