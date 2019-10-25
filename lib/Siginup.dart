@@ -1,3 +1,4 @@
+import 'ProfilePage.dart';
 import 'regform.dart';
 import 'CustomIcons.dart';
 import 'SocialIcons.dart';
@@ -5,17 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'firbase.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+
 class Siginup extends StatefulWidget {
   @override
   _MyAppState createState() => new _MyAppState();
 }
 
 class _MyAppState extends State<Siginup> {
+  _MyAppState({FirebaseAuth firebaseAuth, GoogleSignIn googleSignin})
+      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth;
+
   String _email;
   String   _password;
-  //google sign
-  /// GoogleSignIn googleauth = new GoogleSignIn();
+
   final formkey=new GlobalKey<FormState>();
   checkFields(){
     final form=formkey.currentState;
@@ -26,16 +32,21 @@ class _MyAppState extends State<Siginup> {
     return false;
   }
 
-
-
+  Future<void> signUp({String email, String password}) async {
+    return await _firebaseAuth.createUserWithEmailAndPassword(
+      email: _email,
+      password: _password,
+    );
+  }
   createUser()async{
     if (checkFields()){
       await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password)
           .then((user){
         print('signed in as ${user.uid}');
-
-        Navigator.of(context).pop();
-        Navigator.of(context).pushNamed('/userpage');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
       }).catchError((e){
         print(e);
       });
@@ -95,7 +106,7 @@ class _MyAppState extends State<Siginup> {
                     ],
                   ),
                   SizedBox(
-                    height: ScreenUtil.getInstance().setHeight(350),
+                    height: ScreenUtil.getInstance().setHeight(320),
                   ),
                   Form(
                       key: formkey,
@@ -120,7 +131,7 @@ class _MyAppState extends State<Siginup> {
                   ),
                   Center(
                     child: InkWell(
-                      onTap: createUser,
+                      onTap: signUp,
                       child: Container(
                         width: ScreenUtil.getInstance().setWidth(330),
                         height: ScreenUtil.getInstance().setHeight(100),
@@ -143,18 +154,40 @@ class _MyAppState extends State<Siginup> {
                             child: Center(
                               child: Text("SIGNUP",
                                   style: TextStyle(
+
                                       color: Colors.white,
                                       fontFamily: "Poppins-Bold",
                                       fontSize: 18,
-                                      letterSpacing: 1.0)),
+                                      letterSpacing: 1.0,
+                                        )),
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: ScreenUtil.getInstance().setHeight(80),
+                  ),
 
-
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "By signing up your are agrreing from our  ",
+                        style: TextStyle(fontFamily: "Poppins-Medium"),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> Siginup()));
+                        },
+                        child: Text("Privacy Policy",
+                            style: TextStyle(
+                                color: Color(0xFF5d74e3),
+                                fontFamily: "Poppins-Bold")),
+                      )
+                    ],
+                  )
 
                 ],
               ),

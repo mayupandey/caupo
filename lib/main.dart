@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'Loginpage.dart';
+import 'ProfilePage.dart';
+import 'Siginup.dart';
+import 'splash.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -20,8 +23,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.grey,
       ),
-      home: MyApp1(),
+      home: SplashPage(),
+        routes: <String, WidgetBuilder>{
 
+          '/profile': (BuildContext context) => ProfilePage(),
+          '/login': (BuildContext context) => MyApp1(),
+          '/register': (BuildContext context) => Siginup(),
+        }
     );
   }
 }

@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:oktoast/oktoast.dart';
 
 
 import 'CustomIcons.dart';
 import 'ProfilePage.dart';
 import 'Siginup.dart';
 import 'SocialIcons.dart';
+import 'firbase.dart';
 import 'form.dart';
 import 'home.dart';
 
@@ -20,28 +22,42 @@ class MyApp1 extends StatefulWidget {
 
 class _MyAppState extends State<MyApp1> {
 
+
+
+
+
+  _MyAppState({
+
+
+    FirebaseAuth firebaseAuth, GoogleSignIn googleSignin
+
+
+
+
+  })
+      : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+        _googleSignIn = googleSignin ?? GoogleSignIn();
+  final FirebaseAuth _firebaseAuth;
+  final GoogleSignIn _googleSignIn;
   String _email;
   String   _password;
 
 
-
   //google sign
 
-  final GoogleSignIn googleauth = new GoogleSignIn(scopes:['email']);
-  //facebook
-
-   _logingoogle() async {
-     try{
-     await googleauth.signIn();
-     Navigator.push(
-         context,
-         MaterialPageRoute(builder: (context) => ProfilePage()));
-
-     }
-     catch(err){
-       print(err);
-     }
-   }
+  Future<FirebaseUser> signInWithGoogle() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =
+    await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    await _firebaseAuth.signInWithCredential(credential);
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ProfilePage()));
+  }
 
   final formkey=new GlobalKey<FormState>();
   checkFields(){
@@ -54,17 +70,22 @@ class _MyAppState extends State<MyApp1> {
   }
 
 
-
+//loginwithemail
   LoginUser(){
-    if (checkFields()){
-      FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password)
-          .then((user){
-        print("signed in as ${user.uid}");
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>home()));
-      }).catchError((e){
-        print(e);
-      });
+    try{
+      if (checkFields()){
+        FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password)
+            .then((user){
+          showToast(user.uid, position: ToastPosition.bottom);
+
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>FirstRoute()));
+        });
+      }
     }
+    catch(PlatformException){
+      showToast(PlatformException, position: ToastPosition.bottom);
+    }
+
   }
   bool _isSelected = false;
 
@@ -251,7 +272,7 @@ class _MyAppState extends State<MyApp1> {
                         ],
                         iconData: CustomIcons.googlePlus,
                         onPressed: () {
-                          _logingoogle();
+                          signInWithGoogle();
                         },
                       ),
                       SocialIcon(
@@ -301,4 +322,9 @@ class _MyAppState extends State<MyApp1> {
       ),
     );
   }
+
+
+
+
+
 }
