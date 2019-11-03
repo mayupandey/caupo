@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'ProfilePage.dart';
 import 'regform.dart';
 import 'CustomIcons.dart';
@@ -21,7 +23,8 @@ class _MyAppState extends State<Siginup> {
 
   String _email;
   String   _password;
-
+  String _name;
+  String _mobile;
   final formkey=new GlobalKey<FormState>();
   checkFields(){
     final form=formkey.currentState;
@@ -41,8 +44,20 @@ class _MyAppState extends State<Siginup> {
   createUser()async{
     if (checkFields()){
       await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password)
-          .then((user){
-        print('signed in as ${user.uid}');
+      //firestoresave details
+      .then((user)=>Firestore.instance
+      .collection("users")
+      .document(user.uid)
+      .setData({
+        "uid":user.uid,
+        "name":_name,
+        "email":_email,
+        "mobile":_mobile,
+
+
+      }))
+      //navigate to another page
+          .then((result){
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => ProfilePage()),
@@ -114,6 +129,8 @@ class _MyAppState extends State<Siginup> {
                         validation: 'required',
                         saveemail: (value) => _email = value,
                         savepwd: (value) => _password = value,
+                        savename: (value)=>_name=value,
+                        mob: (value)=>_mobile=value,
 
                       )),
                   SizedBox(height: ScreenUtil.getInstance().setHeight(40)),
@@ -167,7 +184,7 @@ class _MyAppState extends State<Siginup> {
                     ),
                   ),
                   SizedBox(
-                    height: ScreenUtil.getInstance().setHeight(80),
+                    height: ScreenUtil.getInstance().setHeight(30),
                   ),
 
                   Column(
@@ -181,7 +198,7 @@ class _MyAppState extends State<Siginup> {
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context)=> Siginup()));
                         },
-                        child: Text("Privacy Policy",
+                        child: Text("Terms & Condition and Privacy Policy",
                             style: TextStyle(
                                 color: Color(0xFF5d74e3),
                                 fontFamily: "Poppins-Bold")),

@@ -22,7 +22,8 @@ dependencies:
 
   flutter_screenutil: ^0.5.2
   oktoast: ^2.1.8
-
+  cloud_firestore: ^0.12.9+5
+  barcode_scan: ^1.0.0
   firebase_auth: ^0.11.1+5
   google_sign_in: ^3.2.2
 
@@ -61,6 +62,7 @@ flutter:
     - assets/images/password_icon.png
     - assets/images/user_icon.png
     - assets/images/as.png
+    - assets/images/qr.gif
 
 
 

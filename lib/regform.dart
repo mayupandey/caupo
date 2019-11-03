@@ -4,15 +4,42 @@ class SiginupFormCard extends StatelessWidget {
   String validation;
   final saveemail;
   final savepwd;
-  SiginupFormCard({this.saveemail,this.savepwd,this.validation});
+  final savename;
+  final mob;
+  SiginupFormCard({this.saveemail,this.savepwd,this.validation,this.savename,this.mob});
 
+  String pwdValidator(String value) {
+    if (value.length < 8) {
+      return 'Password must be longer than 8 characters';
+    } else {
+      return null;
+    }
+  }
+  String mobValidator(String value) {
+    if (value.length < 10) {
+      return 'Invalid mobile number';
+    } else {
+      return null;
+    }
+  }
+
+  String emailValidator(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value)) {
+      return 'Email format is invalid';
+    } else {
+      return null;
+    }
+  }
 
   //save;
   @override
   Widget build(BuildContext context) {
     return new Container(
       width: double.infinity,
-      height: ScreenUtil.getInstance().setHeight(500),
+      height: ScreenUtil.getInstance().setHeight(1000),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),
@@ -39,6 +66,41 @@ class SiginupFormCard extends StatelessWidget {
             SizedBox(
               height: ScreenUtil.getInstance().setHeight(30),
             ),
+            Text("Name",
+                style: TextStyle(
+                    fontFamily: "Poppins-Medium",
+                    fontSize: ScreenUtil.getInstance().setSp(26))),
+            TextFormField(
+                decoration: InputDecoration(
+                    hintText: "Full name",
+                    hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
+                obscureText: false,
+                validator: (value)=>
+                value.isEmpty ? validation: null,
+                onSaved:savename
+            ),
+            SizedBox(
+              height: ScreenUtil.getInstance().setHeight(30),
+            ),
+            Text("Mobile Number",
+                style: TextStyle(
+                    fontFamily: "Poppins-Medium",
+                    fontSize: ScreenUtil.getInstance().setSp(26))),
+            TextFormField(
+                decoration: InputDecoration(
+                    hintText: "1234567890",
+                    hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
+                obscureText: false,
+                validator: (value)=>
+                value.isEmpty ? validation: mobValidator(value),
+                onSaved:mob
+            ),
+            SizedBox(
+              height: ScreenUtil.getInstance().setHeight(30),
+            ),
+
+
+
             Text("Email",
                 style: TextStyle(
                     fontFamily: "Poppins-Medium",
@@ -49,7 +111,7 @@ class SiginupFormCard extends StatelessWidget {
                     hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
                 obscureText: false,
                 validator: (value)=>
-                value.isEmpty ? validation: null,
+                value.isEmpty ? validation: emailValidator(value),
                 onSaved:saveemail
             ),
             SizedBox(
@@ -66,13 +128,14 @@ class SiginupFormCard extends StatelessWidget {
                     hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
                 obscureText: true,
                 validator: (value)=>
-                value.isEmpty ? validation: null,
+                value.isEmpty ? validation: pwdValidator(value),
                 onSaved: savepwd
 
             ),
             SizedBox(
               height: ScreenUtil.getInstance().setHeight(35),
             ),
+
 
           ],
         ),

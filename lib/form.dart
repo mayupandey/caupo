@@ -6,13 +6,31 @@ class FormCard extends StatelessWidget {
   final savepwd;
   FormCard({this.saveemail,this.savepwd,this.validation});
 
+  //validator
+  String pwdValidator(String value) {
+    if (value.length < 8) {
+      return 'Password must be longer than 8 characters';
+    } else {
+      return null;
+    }
+  }
+  String emailValidator(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (!regex.hasMatch(value)) {
+      return 'Email format is invalid';
+    } else {
+      return null;
+    }
+  }
 
   //save;
   @override
   Widget build(BuildContext context) {
     return new Container(
       width: double.infinity,
-      height: ScreenUtil.getInstance().setHeight(525),
+      height: ScreenUtil.getInstance().setHeight(600),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8.0),
@@ -49,7 +67,7 @@ class FormCard extends StatelessWidget {
                     hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
                 obscureText: false,
                 validator: (value)=>
-                value.isEmpty ? validation: null,
+                value.isEmpty ? validation: emailValidator(value),
                 onSaved:saveemail
             ),
             SizedBox(
@@ -66,7 +84,7 @@ class FormCard extends StatelessWidget {
                     hintStyle: TextStyle(color: Colors.grey, fontSize: 12.0)),
                 obscureText: true,
                 validator: (value)=>
-                value.isEmpty ? validation: null,
+                value.isEmpty ? validation: pwdValidator(value),
                 onSaved: savepwd
 
             ),
